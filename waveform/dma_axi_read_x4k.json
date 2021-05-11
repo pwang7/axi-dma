@@ -1,0 +1,17 @@
+{signal: [
+  {name: 'clk',         wave: 'p..........'},
+  {name: 'start',       wave: '010........'},
+  {name: 'fsm',         wave: '2.22.22.22x', data: 'IDLE AR R AR R LAST AR'},
+  {name: 'r.data',      wave: 'x..22x22x..', data: '21xx 6543 a987 edcb xxxf'},
+  {name: 'r.strb',      wave: 'x..22x22x..', data: '1100 1111 1111 1111 0001'},
+  {name: 'r.vld',       wave: '0..1.01.0..'},
+  {name: 'r.rdy',       wave: '0..1.01.0..'},
+  {name: 'offset',      wave: 'x.2......x.', data: '2 0'},
+  {name: 'nxtRow',      wave: '010.....10.'},
+  {name: 'curRowAddr',  wave: 'x.2......x.', data: '4090'},
+  {name: 'curAlignedRowAddr',  wave: 'x.2......x.', data: '4088'},
+  {name: 'burstLen',    wave: 'x.2..2...x.', data: '2 2'},
+  {name: 'dout.payload', wave: 'x...2x222x.', data: '4321 8765 cba9 xxed'},
+  {name: 'dout.vld',     wave: '0...101..0.'},
+  {name: 'dout.rdy',     wave: '0...101..0.'},
+]}

@@ -1,0 +1,17 @@
+{signal: [
+  {name: 'clk',         wave: 'p...........'},
+  {name: 'start',       wave: '010.........'},
+  {name: 'fsm',         wave: '2.22.222.222', data: 'IDLE AW W B AW W LAST B AW'},
+  {name: 'w.data',      wave: 'x..22x.222x.', data: '21xx 6543 a987 edcb xxxf'},
+  {name: 'w.strb',      wave: 'x..22x.222x.', data: '1100 1111 1111 1111 0001'},
+  {name: 'w.vld',       wave: '0..1.0.1..0.'},
+  {name: 'w.rdy',       wave: '0..1.0.1..0.'},
+  {name: 'offset',      wave: 'x.2........x', data: '2 0'},
+  {name: 'nxtRow',      wave: '010.......10'},
+  {name: 'curRowAddr',  wave: 'x.2........x', data: '4090'},
+  {name: 'curAlignedRowAddr',  wave: 'x.2........x', data: '4088'},
+  {name: 'burstLen',    wave: 'x.2...2....x', data: '2 3'},
+  {name: 'din.payload', wave: 'x..222..2x..', data: '4321 8765 cba9 xfed'},
+  {name: 'din.vld',     wave: '0..1.....0..'},
+  {name: 'din.rdy',     wave: '0..1.0.1.0..'},
+]}
