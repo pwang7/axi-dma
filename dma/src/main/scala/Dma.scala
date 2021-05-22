@@ -11,6 +11,7 @@ case class DmaConfig(
     burstLen: Int = 16,
     dataWidth: Int = 32,
     littleEndien: Boolean = true,
+    idWidth: Int = 4,
     xySizeMax: Int = 65536
 ) {
   val busByteSize = dataWidth / 8
@@ -30,10 +31,13 @@ case class DmaConfig(
   val axiConfig = Axi4Config(
     addressWidth = addressWidth,
     dataWidth = dataWidth,
-    idWidth = 4,
+    idWidth = idWidth,
     useId = true,
     useQos = false,
-    useRegion = false
+    useRegion = false,
+    useLock = false,
+    useCache = false,
+    useProt = false
   )
 }
 
@@ -112,9 +116,15 @@ class DmaRead(dmaConfig: DmaConfig) extends Component {
   io.axiR.ar.len := burstLenReg - 1
   io.axiR.ar.size := log2Up(dmaConfig.dataWidth)
   io.axiR.ar.burst := Axi4.burst.INCR
-  io.axiR.ar.lock := Axi4.lock.NORMAL
-  io.axiR.ar.cache := B(0, 2 bits) ## io.param.cf ## io.param.bf
-  io.axiR.ar.prot := 2
+  if (dmaConfig.axiConfig.useLock) {
+    io.axiR.ar.lock := Axi4.lock.NORMAL
+  }
+  if (dmaConfig.axiConfig.useCache) {
+    io.axiR.ar.cache := B(0, 2 bits) ## io.param.cf ## io.param.bf
+  }
+  if (dmaConfig.axiConfig.useProt) {
+    io.axiR.ar.prot := 2
+  }
   io.axiR.ar.valid := arValidReg
 
   val dataPreReg = Reg(Bits(dmaConfig.dataWidth bits)) init (0)
@@ -446,9 +456,15 @@ class DmaWrite(dmaConfig: DmaConfig) extends Component {
   io.axiW.aw.len := burstLenReg - 1
   io.axiW.aw.size := log2Up(dmaConfig.dataWidth)
   io.axiW.aw.burst := Axi4.burst.INCR
-  io.axiW.aw.lock := Axi4.lock.NORMAL
-  io.axiW.aw.cache := B(0, 2 bits) ## io.param.cf ## io.param.bf
-  io.axiW.aw.prot := 2 // Unprivileged non-secure data access
+  if (dmaConfig.axiConfig.useProt) {
+    io.axiW.aw.lock := Axi4.lock.NORMAL
+  }
+  if (dmaConfig.axiConfig.useProt) {
+    io.axiW.aw.cache := B(0, 2 bits) ## io.param.cf ## io.param.bf
+  }
+  if (dmaConfig.axiConfig.useProt) {
+    io.axiW.aw.prot := 2 // Unprivileged non-secure data access
+  }
   io.axiW.aw.valid := awValidReg
 
   val bReadyReg = Reg(Bool) init (False)

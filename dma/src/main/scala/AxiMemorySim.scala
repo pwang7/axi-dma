@@ -18,6 +18,11 @@ import java.awt.image.Raster
 import java.awt.image.DataBufferByte
 import scala.util.Random
 
+@SuppressWarnings(
+  Array(
+    "scalafix:DisableSyntax.var"
+  )
+)
 class MemoryPage(size: Int) {
   val data = new Array[Byte](size)
 
@@ -66,6 +71,12 @@ class MemoryPage(size: Int) {
   }
 }
 
+@SuppressWarnings(
+  Array(
+    "scalafix:DisableSyntax.null",
+    "scalafix:DisableSyntax.var"
+  )
+)
 case class SparseMemory() {
   val memory = Array.fill[MemoryPage](4096)(null)
 
@@ -268,6 +279,11 @@ case class AxiMemorySimConfig(
     useAlteraBehavior: Boolean = false
 ) {}
 
+@SuppressWarnings(
+  Array(
+    "scalafix:DisableSyntax.var"
+  )
+)
 case class AxiMemorySim(
     axi: Axi4,
     clockDomain: ClockDomain,

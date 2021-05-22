@@ -51,22 +51,19 @@ object DmaSim extends App {
     // )
 
     // Prepare memory data
-    var d = 1
-    var addr = dut.io.param.sar.toLong
+    val srcBeginAddr = dut.io.param.sar.toLong
+    val srcRowGap = dut.io.param.xsize.toInt + dut.io.param.srcystep.toInt
+    val rowSize = dut.io.param.xsize.toInt
     for (y <- 0 until dut.io.param.ysize.toInt) {
       for (x <- 0 until dut.io.param.xsize.toInt) {
+        val inc = y * srcRowGap + x
+        val d = (y * rowSize + x) % 128
+        val addr = srcBeginAddr + inc
+
         axiMem.memory.write(addr, d.toByte)
         println(f"prepare: addr=$addr, data=${d}=${d}%x")
         queue.enqueue(d)
-
-        addr = addr + 1
-        if (d < 127) {
-          d = d + 1
-        } else {
-          d = 1
-        }
       }
-      addr = addr + dut.io.param.srcystep.toLong
     }
 
     dut.clockDomain.waitSampling(10)
@@ -78,22 +75,19 @@ object DmaSim extends App {
     waitUntil(dut.io.ctrl.done.toBoolean)
     dut.clockDomain.waitSampling(2)
 
-    var b: Byte = 0
-    var t = 0
-    addr = dut.io.param.dar.toLong
+    val dstBeginAddr = dut.io.param.dar.toLong
+    val dstRowGap = dut.io.param.xsize.toInt + dut.io.param.dstystep.toInt
     for (y <- 0 until dut.io.param.ysize.toInt) {
       for (x <- 0 until dut.io.param.xsize.toInt) {
-        b = axiMem.memory.read(addr)
+        val inc = y * dstRowGap + x
+        val addr = dstBeginAddr + inc
+
+        val b = axiMem.memory.read(addr)
         println(f"check: addr=$addr, data=${b.toInt}=${b.toInt}%x")
-        t = queue.dequeue()
+        val t = queue.dequeue()
         assert(b.toInt == t, s"${b.toInt}==${t} assert failed")
-
-        addr = addr + 1
-        d = d + 1
       }
-      addr = addr + dut.io.param.dstystep.toLong
     }
-
   }
 
   SimConfig.withWave
